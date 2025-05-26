@@ -29,7 +29,12 @@ fi
 echo "🛠 Installing Odoo18 as '$OE_USER' on port $OE_PORT with Python3.12..."
 
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y git python3.12 python3.12-venv python3-pip build-essential wget mailutils \
+sudo apt install -y git python3.11 python3.11-venv python3-pip build-essential wget mailutils
+# Install Node.js from Nodesource (recommended for Odoo)
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+sudo npm install -g rtlcss
+ \
   python3-dev python3-setuptools libxslt-dev libzip-dev libldap2-dev libsasl2-dev \
   node-less libjpeg-dev libpq-dev libxml2-dev libssl-dev libffi-dev \
   libjpeg8-dev zlib1g-dev liblcms2-dev libblas-dev libatlas-base-dev \
@@ -76,7 +81,7 @@ if [ "$IS_ENTERPRISE" = "True" ]; then
 fi
 echo "Custom and Enterprise addon paths set up."
 
-sudo -u "$OE_USER" python3.12 -m venv "$OE_HOME/venv"
+sudo -u "$OE_USER" python3.11 -m venv "$OE_HOME/venv"
 sudo -u "$OE_USER" "$OE_HOME/venv/bin/pip" install wheel
 sudo -u "$OE_USER" "$OE_HOME/venv/bin/pip" install -r requirements.txt
 
@@ -113,7 +118,7 @@ SyslogIdentifier=$OE_USER
 PermissionsStartOnly=true
 User=$OE_USER
 Group=$OE_USER
-ExecStart=$OE_HOME/venv/bin/python3.12 $OE_HOME/odoo-bin -c /etc/$OE_USER.conf
+ExecStart=$OE_HOME/venv/bin/python3.11 $OE_HOME/odoo-bin -c /etc/$OE_USER.conf
 StandardOutput=journal+console
 Restart=on-failure
 RestartSec=5s
